@@ -1,0 +1,139 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 30 20% 98%;
+    --foreground: 30 10% 10%;
+    --card: 30 20% 100%;
+    --card-foreground: 30 10% 10%;
+    --popover: 30 20% 100%;
+    --popover-foreground: 30 10% 10%;
+    --primary: 165 60% 45%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 30 15% 92%;
+    --secondary-foreground: 30 10% 20%;
+    --muted: 30 15% 95%;
+    --muted-foreground: 30 10% 45%;
+    --accent: 165 40% 92%;
+    --accent-foreground: 165 60% 25%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 30 15% 88%;
+    --input: 30 15% 88%;
+    --ring: 165 60% 45%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 30 10% 8%;
+    --foreground: 30 10% 98%;
+    --card: 30 10% 10%;
+    --card-foreground: 30 10% 98%;
+    --popover: 30 10% 10%;
+    --popover-foreground: 30 10% 98%;
+    --primary: 165 60% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 30 10% 15%;
+    --secondary-foreground: 30 10% 90%;
+    --muted: 30 10% 15%;
+    --muted-foreground: 30 10% 60%;
+    --accent: 165 40% 20%;
+    --accent-foreground: 165 60% 90%;
+    --destructive: 0 62.8% 50.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 30 10% 20%;
+    --input: 30 10% 20%;
+    --ring: 165 60% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-secondary;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-muted-foreground/30 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-muted-foreground/50;
+}
+
+/* Smooth transitions */
+* {
+  @apply transition-colors duration-200;
+}
+
+/* Focus styles */
+:focus-visible {
+  @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  @apply font-semibold tracking-tight;
+}
+
+/* Animations */
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Journal entry styles */
+.journal-content {
+  @apply leading-relaxed text-base;
+  line-height: 1.8;
+}
+
+.journal-content p {
+  @apply mb-4;
+}
+
+/* Loading dots */
+@keyframes dot-flashing {
+  0% {
+    opacity: 0.2;
+  }
+  20%, 100% {
+    opacity: 1;
+  }
+}
+
+.dot-flashing {
+  animation: dot-flashing 1.4s infinite linear;
+}
+
+.dot-flashing:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.dot-flashing:nth-child(3) {
+  animation-delay: 0.4s;
+}
