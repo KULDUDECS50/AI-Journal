@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import Anthropic from '@anthropic-ai/sdk'
+import { GoogleGenerativeAI } from '@google/generative-ai'
 import type { AIMessage } from '@/lib/types'
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-})
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
 
 const SYSTEM_PROMPT = `You are a warm, empathetic AI journaling companion. Your role is to:
 - Help users explore their thoughts and feelings through gentle, open-ended questions
@@ -50,20 +48,27 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Build conversation history for Claude
-    const claudeMessages: Anthropic.MessageParam[] = [
-      {
-        role: 'user',
-        content: `Here's what I just wrote in my journal:\n\n${content}`,
-      }
-    ]
+    // Initialize Gemini model
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-1.5-flash',
+      systemInstruction: SYSTEM_PROMPT,
+    })
+
+    // Build conversation history
+    const history = []
+
+    // Add journal content as first user message
+    history.push({
+      role: 'user',
+      parts: [{ text: `Here's what I just wrote in my journal:\n\n${content}` }],
+    })
 
     // Add previous AI conversation if exists
     if (messages && messages.length > 0) {
       messages.forEach(msg => {
-        claudeMessages.push({
-          role: msg.role === 'user' ? 'user' : 'assistant',
-          content: msg.content,
+        history.push({
+          role: msg.role === 'user' ? 'user' : 'model',
+          parts: [{ text: msg.content }],
         })
       })
     }
@@ -73,27 +78,18 @@ export async function POST(request: NextRequest) {
       ? 'Ask me one thoughtful follow-up question to help me go deeper into my thoughts and feelings.'
       : 'Acknowledge what I shared and invite me to continue sharing more.'
 
-    claudeMessages.push({
-      role: 'user',
-      content: actionInstruction,
-    })
+    // Start chat with history
+    const chat = model.startChat({ history })
 
-    // Call Claude API
-    const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 300,
-      system: SYSTEM_PROMPT,
-      messages: claudeMessages,
-    })
-
-    const aiResponse = response.content[0].type === 'text'
-      ? response.content[0].text
-      : ''
+    // Send the action instruction
+    const result = await chat.sendMessage(actionInstruction)
+    const response = result.response
+    const aiResponse = response.text()
 
     return NextResponse.json({ message: aiResponse })
 
   } catch (error) {
-    console.error('Claude API error:', error)
+    console.error('Gemini API error:', error)
     return NextResponse.json(
       { error: 'Failed to get AI response' },
       { status: 500 }

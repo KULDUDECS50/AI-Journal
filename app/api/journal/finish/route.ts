@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import Anthropic from '@anthropic-ai/sdk'
+import { GoogleGenerativeAI } from '@google/generative-ai'
 import type { AIMessage } from '@/lib/types'
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-})
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
 
 const FINISH_SYSTEM_PROMPT = `You are a warm, empathetic AI journaling companion. The user has finished writing their journal entry.
 
@@ -38,45 +36,45 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Build conversation for Claude
-    const claudeMessages: Anthropic.MessageParam[] = [
-      {
-        role: 'user',
-        content: `Here's my complete journal entry:\n\n${content}`,
-      }
-    ]
+    // Initialize Gemini model
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-1.5-flash',
+      systemInstruction: FINISH_SYSTEM_PROMPT,
+    })
+
+    // Build conversation history
+    const history = []
+
+    // Add journal content
+    history.push({
+      role: 'user',
+      parts: [{ text: `Here's my complete journal entry:\n\n${content}` }],
+    })
 
     // Add any AI conversation that happened
     if (messages && messages.length > 0) {
       messages.forEach(msg => {
-        claudeMessages.push({
-          role: msg.role === 'user' ? 'user' : 'assistant',
-          content: msg.content,
+        history.push({
+          role: msg.role === 'user' ? 'user' : 'model',
+          parts: [{ text: msg.content }],
         })
       })
     }
 
-    claudeMessages.push({
-      role: 'user',
-      content: 'I\'m finished with this entry. Please provide a brief, affirming reflection (2-3 sentences).',
-    })
+    // Start chat with history
+    const chat = model.startChat({ history })
 
-    // Call Claude API
-    const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 200,
-      system: FINISH_SYSTEM_PROMPT,
-      messages: claudeMessages,
-    })
-
-    const reflection = response.content[0].type === 'text'
-      ? response.content[0].text
-      : ''
+    // Request final reflection
+    const result = await chat.sendMessage(
+      "I'm finished with this entry. Please provide a brief, affirming reflection (2-3 sentences)."
+    )
+    const response = result.response
+    const reflection = response.text()
 
     return NextResponse.json({ reflection })
 
   } catch (error) {
-    console.error('Claude API error:', error)
+    console.error('Gemini API error:', error)
     return NextResponse.json(
       { error: 'Failed to get AI reflection' },
       { status: 500 }

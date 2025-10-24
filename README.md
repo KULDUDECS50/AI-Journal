@@ -1,16 +1,17 @@
 # AI Journal - AI-Powered Journaling App
 
-A modern, AI-powered journaling web application built with Next.js, featuring an interactive journaling experience with AI-guided insights powered by Claude. This app helps users write, reflect, and receive personalized guidance to support mental health and personal growth.
+A modern, AI-powered journaling web application built with Next.js, featuring an interactive journaling experience with AI-guided insights powered by Google Gemini (FREE!). This app helps users write, reflect, and receive personalized guidance to support mental health and personal growth.
 
 ## Features
 
 ### Core Features
-- **AI-Powered Journaling Companion**: Interactive conversations with Claude AI that helps you explore your thoughts and feelings
+- **AI-Powered Journaling Companion**: Interactive conversations with Google Gemini AI that helps you explore your thoughts and feelings
 - **Beautiful Dashboard**: View all your journal entries with stats, streaks, and insights
 - **Voice Input**: Speech-to-text functionality for hands-free journaling
 - **Auto-Save**: Automatic draft saving every 30 seconds
 - **Mood Tracking**: Optional mood indicators for each entry
 - **Secure & Private**: End-to-end encryption with Supabase authentication
+- **FREE AI**: Uses Google Gemini's free tier - no credit card required!
 
 ### AI Interactions
 - **Go Deeper**: AI asks thoughtful follow-up questions to help explore feelings
@@ -39,7 +40,7 @@ A modern, AI-powered journaling web application built with Next.js, featuring an
 - **API**: Next.js API Routes
 - **Database**: PostgreSQL (Supabase)
 - **Authentication**: Supabase Auth
-- **AI**: Anthropic Claude API (Sonnet 4.5)
+- **AI**: Google Gemini API (Gemini 1.5 Flash - FREE tier!)
 - **Voice-to-Text**: Web Speech API
 
 ## Getting Started
@@ -47,7 +48,7 @@ A modern, AI-powered journaling web application built with Next.js, featuring an
 ### Prerequisites
 - Node.js 18+ and npm/yarn/pnpm
 - A Supabase account and project
-- An Anthropic API key
+- A Google Gemini API key (FREE - no credit card needed!)
 
 ### 1. Clone the Repository
 ```bash
@@ -79,8 +80,8 @@ Create a `.env.local` file in the root directory:
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 
-# Anthropic Claude API
-ANTHROPIC_API_KEY=your_anthropic_api_key
+# Google Gemini API (FREE!)
+GEMINI_API_KEY=your_gemini_api_key
 
 # App URL
 NEXT_PUBLIC_APP_URL=http://localhost:3000
@@ -88,7 +89,7 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 
 **Where to get these:**
 - **Supabase URL & Anon Key**: Supabase Dashboard > Project Settings > API
-- **Anthropic API Key**: [console.anthropic.com](https://console.anthropic.com) > API Keys
+- **Gemini API Key**: [makersuite.google.com/app/apikey](https://makersuite.google.com/app/apikey) (FREE - no credit card required!)
 
 ### 5. Run Database Migration
 
@@ -259,7 +260,7 @@ is_finished     BOOLEAN
 Make sure to set these in your Vercel project settings:
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- `ANTHROPIC_API_KEY`
+- `GEMINI_API_KEY`
 - `NEXT_PUBLIC_APP_URL` (your production URL)
 
 ## Customization
@@ -293,9 +294,10 @@ Edit the system prompts in:
 - Try using HTTPS (required for Web Speech API)
 
 ### AI Responses Failing
-- Verify your `ANTHROPIC_API_KEY` is correct
-- Check API usage limits in Anthropic console
+- Verify your `GEMINI_API_KEY` is correct
+- Check API usage limits at [Google AI Studio](https://makersuite.google.com)
 - Review error logs in browser console
+- Make sure you've enabled the Gemini API in your Google Cloud project
 
 ### Supabase Connection Issues
 - Verify environment variables are set correctly
@@ -319,7 +321,7 @@ This project is licensed under the MIT License.
 
 - Built with [Next.js](https://nextjs.org/)
 - UI components from [shadcn/ui](https://ui.shadcn.com/)
-- AI powered by [Anthropic Claude](https://www.anthropic.com/)
+- AI powered by [Google Gemini](https://ai.google.dev/) (FREE tier!)
 - Database & Auth by [Supabase](https://supabase.com/)
 - Icons from [Lucide](https://lucide.dev/)
 
