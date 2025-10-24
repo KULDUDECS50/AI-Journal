@@ -1,4 +1,5 @@
 import React from 'react';
+import { Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StatusBar } from 'expo-status-bar';
@@ -56,5 +57,5 @@ export default function App() {
 }
 
 const TabIcon = ({ name, color }: { name: string; color: string }) => (
-  <span style={{ fontSize: 24 }}>{name}</span>
+  <Text style={{ fontSize: 24 }}>{name}</Text>
 );
